@@ -66,7 +66,7 @@ const FuelTheft: React.FC = () => {
   }, [selectedBus, timeRange, startDate, endDate]);
 
   return (
-    <div className="px-6 py-8 max-w-5xl mx-auto space-y-10">
+    <div className="px-6 py-8 max-w-5xl mx-auto space-y-10" style={{ position: 'relative', zIndex: 0 }}>
       <h2 className="text-3xl font-bold text-gray-800">🚨 Fuel Theft Monitoring</h2>
 
       <BusTimeFilter

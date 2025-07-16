@@ -5,38 +5,79 @@ import Dashboard from "./pages/Dashboard";
 import FuelTheft from "./pages/FuelTheft";
 import BusEvents from "./pages/BusEvents";
 import MainLayout from "./layout/MainLayout";
+import Watermark from './components/Watermark';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/fuel-theft"
-          element={
-            <MainLayout>
-              <FuelTheft />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/bus-events"
-          element={
-            <MainLayout>
-              <BusEvents />
-            </MainLayout>
-          }
-        />
-      </Routes>
-    </Router>
+    <div style={{ position: 'relative', zIndex: 0 }}>
+      <Watermark />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/fuel-theft"
+            element={
+              <MainLayout>
+                <FuelTheft />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/bus-events"
+            element={
+              <MainLayout>
+                <BusEvents />
+              </MainLayout>
+            }
+          />
+        </Routes>
+      </Router>
+    </div>
   );
 }
+
+
+
+
+// function App() {
+//   return (
+
+//     <Router>
+//       <Routes>
+//         <Route
+//           path="/"
+//           element={
+//             <MainLayout>
+//               <Dashboard />
+//             </MainLayout>
+//           }
+//         />
+//         <Route
+//           path="/fuel-theft"
+//           element={
+//             <MainLayout>
+//               <FuelTheft />
+//             </MainLayout>
+//           }
+//         />
+//         <Route
+//           path="/bus-events"
+//           element={
+//             <MainLayout>
+//               <BusEvents />
+//             </MainLayout>
+//           }
+//         />
+//       </Routes>
+//     </Router>
+//   );
+// }
 
 export default App;

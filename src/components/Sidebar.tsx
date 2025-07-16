@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
     <div
       className={`bg-white shadow-md h-screen fixed top-0 left-0 z-20 transition-all duration-300 ${
         collapsed ? "w-16" : "w-56"
-      }`}
+      }`} 
     >
       {/* Header / Toggle */}
       <div className="p-4 flex justify-between items-center">

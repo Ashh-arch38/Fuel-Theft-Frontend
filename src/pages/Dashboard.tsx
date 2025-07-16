@@ -87,7 +87,7 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <>
+    <div style={{ position: 'relative', zIndex: 0 }}>
       <div className="space-y-10 px-6 py-8 max-w-7xl mx-auto">
         <section className="bg-white rounded-2xl p-6 shadow border border-blue-100">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome to Fuel Theft Monitoring!</h1>
@@ -190,7 +190,7 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
