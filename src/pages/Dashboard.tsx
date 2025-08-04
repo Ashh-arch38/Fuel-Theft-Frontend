@@ -232,8 +232,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Time Filter */}
-      <DashboardTimeFilter
+     <DashboardTimeFilter
         range={timeRange}
         customStart={customStart}
         customEnd={customEnd}
@@ -245,7 +244,7 @@ const Dashboard: React.FC = () => {
       />
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-blue-600 text-white p-6 rounded-lg shadow flex flex-col">
           <BusFront className="w-8 h-8 mb-2" />
           <h4 className="text-sm">Total Buses</h4>
@@ -281,6 +280,7 @@ const Dashboard: React.FC = () => {
           customEnd={customEnd}
         />
       </div>
+
 
       {/* Monitored Buses */}
       <h3 className="text-xl font-semibold mt-10">🚌 Monitored Buses</h3>
