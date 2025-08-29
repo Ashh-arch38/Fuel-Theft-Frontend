@@ -1,4 +1,5 @@
 // src/utils/sensorStatus.ts
+import { SENSOR_OFFLINE_THRESHOLD, SENSOR_ALERT_THRESHOLD } from "../config";
 
 export type SensorStatus = "normal" | "alert" | "offline";
 
@@ -28,17 +29,22 @@ export function determineSensorStatus(sensorInfo: SensorInfo): SensorStatus {
   
   // Time-based status detection
   if (sensorInfo.sensorLastSeen) {
-    const lastSeenTime = new Date(sensorInfo.sensorLastSeen).getTime();
-    const currentTime = Date.now();
-    const timeDiffMinutes = (currentTime - lastSeenTime) / (1000 * 60);
-    
-    // Mark as offline if last seen more than 30 minutes ago
-    if (timeDiffMinutes > 60) {
+    try {
+      const lastSeenTime = new Date(sensorInfo.sensorLastSeen).getTime();
+      const currentTime = Date.now();
+      const timeDiffMinutes = (currentTime - lastSeenTime) / (1000 * 60);
+      
+      // Mark as offline if last seen more than threshold
+      if (timeDiffMinutes > SENSOR_OFFLINE_THRESHOLD) {
+        status = "offline";
+      }
+      // Mark as alert if last seen more than alert threshold but less than offline threshold
+      else if (timeDiffMinutes > SENSOR_ALERT_THRESHOLD && status === "normal") {
+        status = "alert";
+      }
+    } catch (error) {
+      console.warn("Error parsing sensor last seen time:", error);
       status = "offline";
-    }
-    // Mark as alert if last seen more than 10 minutes ago but less than 30 minutes
-    else if (timeDiffMinutes > 40 && status === "normal") {
-      status = "alert";
     }
   }
   

@@ -1,6 +1,7 @@
 /**
  * Error handling and validation utilities
  */
+import { IS_PRODUCTION } from "../config";
 
 export interface ApiError {
   message: string;
@@ -8,26 +9,100 @@ export interface ApiError {
   code?: string;
 }
 
-export function handleApiError(error: any): ApiError {
+/**
+ * Handle API errors with proper logging and user feedback
+ */
+export function handleApiError(error: any, context: string): ApiError {
+  let apiError: ApiError = {
+    message: "An unexpected error occurred"
+  };
+
   if (error.response) {
     // Server responded with error status
-    return {
-      message: error.response.data?.message || `HTTP ${error.response.status}: ${error.response.statusText}`,
-      status: error.response.status,
-      code: error.response.data?.code
-    };
+    apiError.status = error.response.status;
+    apiError.message = error.response.data?.message || `Server error (${error.response.status})`;
   } else if (error.request) {
     // Network error
-    return {
-      message: 'Network error: Unable to connect to server',
-      code: 'NETWORK_ERROR'
-    };
+    apiError.message = "Network error - please check your connection";
+    apiError.code = "NETWORK_ERROR";
   } else {
     // Other error
-    return {
-      message: error.message || 'Unknown error occurred',
-      code: 'UNKNOWN_ERROR'
-    };
+    apiError.message = error.message || "Unknown error occurred";
+  }
+
+  // Log error in development or if explicitly enabled
+  if (!IS_PRODUCTION) {
+    console.error(`[${context}]`, error);
+  }
+
+  return apiError;
+}
+
+/**
+ * Retry function with exponential backoff
+ */
+export async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> {
+  let lastError: any;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      
+      if (i === maxRetries - 1) {
+        throw error;
+      }
+
+      // Exponential backoff
+      const delay = baseDelay * Math.pow(2, i);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  throw lastError;
+}
+
+/**
+ * Validate API response data
+ */
+export function validateApiResponse(data: any, expectedFields: string[]): boolean {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+
+  return expectedFields.every(field => data.hasOwnProperty(field));
+}
+
+/**
+ * Safe number parsing with fallback
+ */
+export function safeParseNumber(value: any, fallback: number = 0): number {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+  
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+/**
+ * Safe date parsing with fallback
+ */
+export function safeParseDate(value: any, fallback: Date = new Date()): Date {
+  if (value instanceof Date) {
+    return value;
+  }
+  
+  try {
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? fallback : parsed;
+  } catch {
+    return fallback;
   }
 }
 
